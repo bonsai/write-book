@@ -165,3 +165,81 @@ video / email / community / Kindle
 - [ ] 事実と解釈を混同していない
 - [ ] 読者に結論を押し付けすぎていない
 - [ ] 企画・販売上の都合で論旨を歪めていない
+
+
+## Agent skill set
+
+このSkillは単独の執筆Skillではなく、コンテンツ制作チームの **Editorial Agent** として動く。各Agentを責務で分け、成果物(Artifact)を受け渡す。
+
+| Agent | 担当 | 主なSkill | 入力 | 出力 |
+|---|---|---|---|---|
+| Product Owner | 目的・優先順位 | hypothesis / scope / acceptance criteria | 読者・事業仮説 | Goal / DoD |
+| Research Agent | 調査・出典 | web/GitHub research / source ledger / fact-check | 問い・テーマ | sources / facts / uncertainty |
+| Editorial Agent | 本・台本 | question design / outline / drafting / revision / objections | research / feedback | book / script / next questions |
+| Video Agent | 動画 | storyboard / timing / subtitles / Remotion / FFmpeg / QA | script / audio / assets | video manifest / preview / render |
+| Audio Agent | podcast | audio script / TTS / mix / show notes / chapters / QA | script / sources | audio / show notes / episode metadata |
+| Distribution Agent | 配信 | metadata / dry-run / scheduling / post QA | approved artifacts | publish manifest |
+| Funnel Agent | 読者導線 | CTA / landing page / email / community handoff | content / signals | funnel artifacts |
+| Community Agent | 読者反応 | feedback / FAQ / objection mining / consent | published content | reader evidence |
+| Analytics Agent | 学習 | KPI / experiments / trends / retrospective | event data | experiment report |
+| Publishing QA Agent | 最終品質 | links / rights / format / consistency | release artifacts | release gate |
+| Scrum Master Agent | 流れ | backlog / sprint / WIP / blocker / review / retrospective | agent status | sprint board / next sprint |
+
+### 既存repoへの接続
+
+- Podcast実装: https://github.com/bonsai/podcast-generator — SKILL.mdを持つ実装Agent。台本(md) → TTS → BGM/SE → radio.mp3 → 視聴ページ。CLIは list / generate / site。
+- 事業・制作親: https://github.com/bonsai/community-based-sales — Product Owner / Scrum parent。Video / Audio / Distribution / Community / Kindleの役割とSprintを管理。
+- Agentモデル: https://github.com/bonsai/bons.ai — 「1 repo = 1 Agent」「Issue = work」「PR = implementation artifact」「Actions = execution」。
+- Community research: https://github.com/bonsai/research-community — podcast / short-form repurposingを含むコミュニティ・コンテンツ調査。
+- Video: community-based-salesでRemotion / FFmpeg / Whisper等をVideo Agentの候補として定義。今回のBonsai内検索では動画専用repoは確認できなかったため、既存ツールをVideo Skillとして束ねる。
+- Audio: Podcastfy / Kokoro / WhisperX等をAudio Agentの候補として定義し、実装のsource of truthは bonsai/podcast-generator とする。
+
+### Podcast / Video Handoff
+
+Research Agent → Editorial Agent
+                    ├→ Audio Agent → podcast-generator
+                    └→ Video Agent → Remotion / FFmpeg
+                                      ↓
+                                Publishing QA
+                                      ↓
+                                Distribution
+
+AudioとVideoは同じ台本を共有しても別Artifact。Audioは耳で成立する時間構造、Videoは画面で成立する時間構造として別QAする。
+
+## Skill Scrum
+
+ScrumはAgentを上下関係にするためではなく、**Agent間の仕事を流すプロトコル**として使う。
+
+### Sprint
+
+1 Sprint = 1つの公開可能なテーマまたはエピソード。
+
+Backlog: 問い / 調査 / 本・台本 / Podcast / Video / QA / 配信 / 読者反応 / Retrospective
+
+Definition of Ready:
+- 中心となる問いがある
+- 重大な出典・権利未確認事項が列挙されている
+- 成果物(book / podcast / video / short)が決まっている
+
+Definition of Done:
+- Editorial review済み
+- Audio / VideoそれぞれのQA済み
+- 権利・出典状態を記録済み
+- 配信manifest生成済み
+- 人間承認が必要な工程は承認済み
+- 次Sprintへの学習を記録済み
+
+### Agent status
+
+BACKLOG → READY → IN PROGRESS → REVIEW → APPROVED → PUBLISHED
+                         │
+                         └→ BLOCKED
+
+各AgentのDoneは「自分の処理が終わった」ではなく、**次のAgentが受け取れるArtifactを完成させた**こと。
+
+### Review / Retrospective
+
+- Review: 公開物そのものを確認
+- Retrospective: 詰まりと不足Skillを記録し、次Sprintへ反映
+- Reader feedbackは結論への命令ではなくResearch / Editorial / Communityへの再入力
+- KPIはAgentの人格・能力の点数ではなく実験結果

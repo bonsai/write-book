@@ -26,6 +26,64 @@ description: 一つの問いから、読者の違和感・基本概念・誤解�
 - `/write-book revise <章>` — 指定章を改善する
 - `/write-book next` — 本の最後から次に考えるべき問いを生成する
 
+## Connected repository
+
+このSkillは、企画・販売導線・読者実験を管理する `bonsai/community-based-sales` と接続して使う。
+
+urlbonsai/community-based-saleshttps://github.com/bonsai/community-based-sales
+
+### Role split
+
+- `write-book`: 問いから本の構造、章、本文、レビューを担当する **Editorial Agent**
+- `community-based-sales`: 読者仮説、テーマ選定、KPI、権利台帳、販売導線、Sprintを担当する **Product / Scrum parent**
+- `write-book` は販売成果を直接最適化せず、読者の問いに対する本の品質と一貫性を担保する。
+- `community-based-sales` は本文を勝手に書き換えず、テーマ、実験結果、読者反応を入力として渡す。
+
+### Input contract
+
+`community-based-sales` から利用できる入力:
+
+- 読者仮説
+- テーマ候補
+- ショート動画・メール・コミュニティから得た反応
+- FAQ・反論・次テーマ候補
+- 出典・権利確認状態
+- KPI／実験結果
+- Kindle企画の制約
+
+### Output contract
+
+`write-book` は次の成果物を返せる形にする:
+
+- 中心となる問い
+- 9章アウトライン
+- 各章のドラフト
+- 章間リンク
+- 反論・限界
+- 実践フレーム
+- 次に考えるべき問い
+- 出典・事実確認が必要な箇所
+- Kindle用Markdown原稿
+
+### Handoff
+
+```text
+community-based-sales
+        │
+        │ reader hypothesis / experiments / objections
+        ▼
+    write-book
+        │
+        │ outline / draft / review / next questions
+        ▼
+community-based-sales
+        │
+        ▼
+video / email / community / Kindle
+```
+
+販売や配信のために本の内容を歪めない。読者反応は「結論を変える命令」ではなく、再検討すべき入力として扱う。
+
 ## Mission
 
 一つの問いを、読者が
@@ -89,6 +147,8 @@ description: 一つの問いから、読者の違和感・基本概念・誤解�
 - `draft` では指定章だけを書く。勝手に全章を書かない。
 - `review` では問題点と修正案を分ける。
 - `outline` では本文を書かず、構造に集中する。
+- `community-based-sales` のKPIを本文の品質評価に直接流用しない。
+- 読者反応を受け取った場合も、反証・追加事例・問いの再設計として扱う。
 
 ## Quality gate
 
@@ -104,3 +164,4 @@ description: 一つの問いから、読者の違和感・基本概念・誤解�
 - [ ] 終章が新しい問いを生む
 - [ ] 事実と解釈を混同していない
 - [ ] 読者に結論を押し付けすぎていない
+- [ ] 企画・販売上の都合で論旨を歪めていない
